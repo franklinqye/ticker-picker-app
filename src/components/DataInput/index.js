@@ -1,5 +1,5 @@
 import React from 'react';
-import './Modal.css';
+import './DataInput.css';
 
 import Select from "react-virtualized-select";
 
@@ -7,6 +7,9 @@ import Select from "react-virtualized-select";
 class DataInput extends React.Component {
   constructor(props) {
     super(props);
+
+    this.processTicker = props.processTicker.bind(this);
+    // this.validTickers = props.validTickers;
 
     this.state = { 
       currentText: "", 
@@ -20,13 +23,14 @@ class DataInput extends React.Component {
     this.updateCurrentText = this.updateCurrentText.bind(this);
   }
 
-  updateCurrentText(text) {
+  updateCurrentText({label: text}) {
     this.setState((state, props) => {
       return {
         ...state, 
         currentText: text
       }
     });
+    console.log("updateing", text);
   }
 
   validateInput(ticker) {
@@ -35,13 +39,14 @@ class DataInput extends React.Component {
         return false;
       }
     }
-    if (!this.props.tickers.includes(ticker)) {
-      return false
-    }
+    // if (!this.props.tickers.includes(ticker)) {
+    //   return false
+    // }
     return true;
   }
 
   handleSubmit(event) {
+    console.log(this.state);
     var ticker = this.state.currentText;
     if (this.validateInput(ticker)) {
       this.setState((state, props) => {
@@ -62,7 +67,10 @@ class DataInput extends React.Component {
               haveResult: true,
               displayMessage: decision
             }
-          });
+          })
+        .catch(err => {
+          console.log("err");
+        });
         })
     } else {
       this.setState((state, props) => {
@@ -75,10 +83,10 @@ class DataInput extends React.Component {
   }
 
   render() {
-    const options = Array.from(new Array(1000), (_, index) => ({
-      label: `Item ${index}`,
-      value: index
-    }));
+    const options = ["aapl", "msft", "roku"].map(val=> ({
+        value: val,
+        label: val
+      }));
 
     const loadingDisplay = () => (
       <div>
@@ -93,7 +101,7 @@ class DataInput extends React.Component {
     )
 
     return (
-      <div width="420px">
+      <div style={{"width": "320px"}}>
         <label>
           Add a Ticker to the field!
         </label>
@@ -102,7 +110,10 @@ class DataInput extends React.Component {
             <Select
               name="Ticker"
               value="one"
+              placeholder="Select Ticker"
+              className="DataInput-select"
               options={options}
+              option={options[0]}
               onChange={this.updateCurrentText}
               />
           </div>

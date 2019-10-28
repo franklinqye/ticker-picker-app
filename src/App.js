@@ -15,13 +15,16 @@ import { Modal, DataInput} from './components'
 
 
 function getTickers() {
-  axios.get();
+  axios.get(`https://tickerpicker.appspot.com/getTickers`);
 
 }
 
-function processTicker() {
-  axios.get();
-
+function processTicker(ticker) {
+  console.log(`getting https://tickerpicker.appspot.com/singleSentiment/${ticker}`)
+  axios.get(`https://tickerpicker.appspot.com/singleSentiment/${ticker}`)
+    .then(res => {
+      return res.body;
+    });
 }
 
 function App() {
@@ -30,7 +33,7 @@ function App() {
       <header className="App-header">
         <h1>Welcome to Ticker Picker!</h1>
         <p>
-          Enter what tickers your interested in:
+          Enter what tickers you're interested in:
         </p>
         <div className="py-5">
           <DataInput 
